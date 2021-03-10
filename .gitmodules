@@ -1,0 +1,9 @@
+[submodule "extension/mandarin-tts"]
+	path = extension/mandarin-tts
+	url = ../mandarin-tts
+[submodule "extension/Chinese.BERT.OpenVINO"]
+	path = extension/Chinese.BERT.OpenVINO
+	url = ../Chinese.BERT.OpenVINO
+[submodule "extension/melgan"]
+	path = extension/melgan
+	url = ../melgan
