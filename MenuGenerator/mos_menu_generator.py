@@ -3,7 +3,7 @@
 import json
 import random
 
-main_meal = {
+main_meals = {
     "摩斯汉堡": (70, 18),
     "辣味摩斯汉堡": (70, 30),
     "摩斯吉士汉堡": (75, 42),
@@ -38,7 +38,7 @@ questions = [
     "我要一份%s，这样多少？"
 ]
 
-def QuestionGenerator(questions, main_meal, unit, num_set='all'):
+def QuestionGenerator(questions, main_meals, unit, num_set='all'):
     # menu["data"]["qas"].append()
 
     # "question": "大麦克多少钱？", 
@@ -49,8 +49,8 @@ def QuestionGenerator(questions, main_meal, unit, num_set='all'):
     #     "answer_start": 16
     # }
     # ]
-    meal_size = len(main_meal)    
-    meal_keys = list(main_meal.keys())
+    meal_size = len(main_meals)    
+    meal_keys = list(main_meals.keys())
     q_size = len(questions)
     q_set = []
     if num_set == 'all':
@@ -63,8 +63,8 @@ def QuestionGenerator(questions, main_meal, unit, num_set='all'):
                 _q["id"]="MOSBURGER_168_QUERY_%d"% (i)
                 _q["answers"] = []
                 _a = {}
-                _a["text"] = str(main_meal[_meal][0]) + unit
-                _a["answer_start"] = main_meal[_meal][1]
+                _a["text"] = str(main_meals[_meal][0]) + unit
+                _a["answer_start"] = main_meals[_meal][1]
                 _q["answers"].append(_a)
                 q_set.append(_q)
                 i = i + 1
@@ -77,8 +77,8 @@ def QuestionGenerator(questions, main_meal, unit, num_set='all'):
             _q["id"]="MOSBURGER_168_QUERY_%d"% (i)
             _q["answers"] = []
             _a = {}
-            _a["text"] = str(main_meal[meal][0]) + unit
-            _a["answer_start"] = main_meal[meal][1]
+            _a["text"] = str(main_meals[meal][0]) + unit
+            _a["answer_start"] = main_meals[meal][1]
             _q["answers"].append(_a)
             q_set.append(_q)
     
@@ -95,8 +95,8 @@ _set = {}
 _set["id"] = "MOSBURGER_168"
 _set["context"] = "摩斯汉堡目前的餐点有：摩斯汉堡价格为70元、辣味摩斯汉堡价格为70元、摩斯吉士汉堡价格为75元、辣味摩斯吉士汉堡价格为75元、蜜汁烤鸡堡价格为70元、摩斯鳕鱼堡价格为70元、黄金炸虾堡价格为75元、摘鲜绿黄金炸虾堡价格为70元、轻柠双牛堡价格为100元、厚切培根和牛堡价格为100元、烧肉珍珠堡(牛)价格为70元、姜烧珍珠堡(猪)价格为65元、海洋珍珠堡价格为75元、元气和牛珍珠堡价格为105元、杏鲍菇珍珠堡(素)价格为70元、藜麦烧肉珍珠堡价格为75元、藜麦姜烧珍珠堡价格为70元、藜麦海洋珍珠堡价格为80元、藜麦元气和牛珍珠堡价格为110元、藜麦杏鲍菇珍珠堡(素)价格为75元、藜麦莲藕牛蒡珍珠堡(素)价格为80元、摩斯热狗堡价格为55元、辣味吉利热狗堡价格为70元。"
 
-# _set["qas"] = QuestionGenerator(questions, main_meal, unit, num_set=20)
-_set["qas"] = QuestionGenerator(questions, main_meal, unit)
+# _set["qas"] = QuestionGenerator(questions, main_meals, unit, num_set=20)
+_set["qas"] = QuestionGenerator(questions, main_meals, unit)
 
 paragraphs = {}
 paragraphs["paragraphs"] = []
