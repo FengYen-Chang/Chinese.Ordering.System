@@ -62,11 +62,11 @@ If you want to enable the specific conversation or another menu, you can based o
 
 After generated the training data, you can based on the **CMRC2018** dataset with Chinese BERT pre-trained model to fine tune your Question Answering system for conversation. 
 
-> **For more detail about the Chinese BERT Please check this [page](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/README.md).**
+> **For more detail about the Chinese BERT Please check this [page](./extension/Chinese.BERT.OpenVINO/README.md).**
 
 * Preparation
     
-    Please check [Preparation section](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/README.md#preparation) on repo., Chinese.BERT.OpenVINO.
+    Please check [Preparation section](./extension/Chinese.BERT.OpenVINO/README.md#preparation) on repo., Chinese.BERT.OpenVINO.
 
 * Fine Tuning the BERT Model for Conversation
 
@@ -100,7 +100,7 @@ After generated the training data, you can based on the **CMRC2018** dataset wit
 
 * Convert the tensorflow model to Intermediate Representation (IR)
 
-    Please check these two sections, [section 1](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/README.md#frozen-tenserflow-model) and [section 2](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/README.md#convert-the-frozen-tensorflow-model-to-intermediate-representation-ir) on repo., Chinese.BERT.OpenVINO to acquire the IR model.
+    Please check these two sections, [section 1](./extension/Chinese.BERT.OpenVINO/README.md#frozen-tenserflow-model) and [section 2](./extension/Chinese.BERT.OpenVINO/README.md#convert-the-frozen-tensorflow-model-to-intermediate-representation-ir) on repo., Chinese.BERT.OpenVINO to acquire the IR model.
 
     
  
