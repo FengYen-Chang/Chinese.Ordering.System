@@ -69,8 +69,6 @@ def build_argparser():
     args.add_argument("--max-query-length", 
                       help="Optional. The maximum number of tokens for the question. Questions longer than "
                       "this will be truncated to this length.", default=64, type=int)
-    args.add_argument("-qn", "--question_number", 
-                      help="Optional. The number for select the question from the input file.", default=0, type=int)
     args.add_argument("-mal", "--max_answer_length", 
                       help="Optional. The maximum length of an answer that can be generated.", default=30, type=int)
     args.add_argument("-nbest", "--num_of_best_set", 
@@ -97,11 +95,10 @@ def get_mask_from_lengths(lengths, max_len=None):
     return mask
 
 def squad(bert, examples, features, input_names, output_names, 
-          question_number, num_of_best_set, max_answer_length):
+          num_of_best_set, max_answer_length):
     infer_feature = []
     for _idx, _ftr in enumerate(features):
-        if _ftr.example_index == question_number :
-            infer_feature.append(_ftr)
+        infer_feature.append(_ftr)
 
     infered_results = []
     n_best_results = []
@@ -144,7 +141,7 @@ def squad(bert, examples, features, input_names, output_names,
                 if length > max_answer_length:
                     continue
                 n_best_results.append((start_logits[_s_idx] +  end_logits[_e_idx], 
-                    "".join(examples[question_number].doc_tokens[feature.token_to_orig_map[_s_idx]:feature.token_to_orig_map[_e_idx] + 1])))
+                    "".join(examples[0].doc_tokens[feature.token_to_orig_map[_s_idx]:feature.token_to_orig_map[_e_idx] + 1])))
 
     max_prob = -100000
     best_result = ""
@@ -309,7 +306,7 @@ def main():
 
     # run bert 
     bert_sentence = squad(exec_bert_net, examples, features, input_names, output_names, 
-                          args.question_number, args.num_of_best_set, args.max_answer_length)
+                          args.num_of_best_set, args.max_answer_length)
     
     sentence = pycnnum.num2cn(int(bert_sentence[:-1])) + bert_sentence[-1]
     print (sentence)
