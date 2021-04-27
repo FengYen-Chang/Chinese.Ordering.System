@@ -70,6 +70,32 @@ class InputFeatures(object):
     self.start_position = start_position
     self.end_position = end_position
 
+def get_doc_token(paragraph_text, do_lower_case=False):
+  raw_doc_tokens = customize_tokenizer(paragraph_text, do_lower_case=do_lower_case)
+  doc_tokens = []
+  char_to_word_offset = []
+  prev_is_whitespace = True
+
+  k = 0
+  temp_word = ""
+  for c in paragraph_text:
+    if tokenization._is_whitespace(c):
+      char_to_word_offset.append(k-1)
+      continue
+    else:
+      temp_word += c
+      char_to_word_offset.append(k)
+    if do_lower_case:
+      temp_word = temp_word.lower()
+    if temp_word == raw_doc_tokens[k]:
+      doc_tokens.append(temp_word)
+      temp_word = ""
+      k += 1
+
+  assert k==len(raw_doc_tokens)
+
+  return doc_tokens
+
 #
 def customize_tokenizer(text, do_lower_case=False):
   tokenizer = tokenization.BasicTokenizer(do_lower_case=do_lower_case)
@@ -118,28 +144,7 @@ def read_squad_examples(input_file, is_training, do_lower_case=False):
   for entry in input_data:
     for paragraph in entry["paragraphs"]:
       paragraph_text = paragraph["context"]
-      raw_doc_tokens = customize_tokenizer(paragraph_text, do_lower_case=do_lower_case)
-      doc_tokens = []
-      char_to_word_offset = []
-      prev_is_whitespace = True
-
-      k = 0
-      temp_word = ""
-      for c in paragraph_text:
-        if tokenization._is_whitespace(c):
-          char_to_word_offset.append(k-1)
-          continue
-        else:
-          temp_word += c
-          char_to_word_offset.append(k)
-        if do_lower_case:
-          temp_word = temp_word.lower()
-        if temp_word == raw_doc_tokens[k]:
-          doc_tokens.append(temp_word)
-          temp_word = ""
-          k += 1
-
-      assert k==len(raw_doc_tokens)
+      doc_tokens = get_doc_token(paragraph_text, do_lower_case=do_lower_case)
 
       for qa in paragraph["qas"]:
         qas_id = qa["id"]
@@ -443,3 +448,25 @@ def export_feature(vocab_file, data_file, do_lower_case, max_seq_length, doc_str
   logging.info("Load {} examples".format(len(examples)))
   features = convert_examples_to_features(examples, tokenizer, max_seq_length,doc_stride, max_query_length, _is_training)
   return examples, features
+
+def export_feature_from_text(vocab_file, paragraph_text, question_text, 
+                             do_lower_case, max_seq_length, doc_stride, max_query_length):
+  _is_training = False
+  tokenizer = ChineseFullTokenizer(
+    vocab_file=vocab_file, do_lower_case=do_lower_case)
+  examples = [SquadExample(
+            qas_id='runtime_question_for_demo',
+            question_text=question_text,
+            doc_tokens=get_doc_token(paragraph_text, do_lower_case=do_lower_case),
+            orig_answer_text=None,
+            start_position=None,
+            end_position=None)]
+
+  logging.info("Load {} examples".format(len(examples)))
+  features = convert_examples_to_features(examples, tokenizer, max_seq_length,doc_stride, max_query_length, _is_training)
+  return examples, features
+
+
+
+
+  

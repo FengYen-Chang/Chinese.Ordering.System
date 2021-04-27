@@ -28,7 +28,6 @@ import utils
 
 from openvino.inference_engine import IECore
 import scipy.io.wavfile as wavfile
-from openvino.inference_engine import IECore
 import tokenization_utils
 
 
@@ -48,9 +47,12 @@ def build_argparser():
                       type=str)
     args.add_argument("-m_b", "--model_bert", help="Required. Path to an .xml file with a trained bert model.", required=True,
                       type=str)
-    args.add_argument("-i", "--input", help="Required. Path to a json file w/ describe and question.",
+    args.add_argument("-i", "--input", help="Required. Path to a .txt file w/ paragraph for bert.",
                       required=True,
                       type=str)#, nargs="+")
+    args.add_argument("-q", "--question", help="Required. A question for bert model",
+                      required=True,
+                      type=str)
     args.add_argument("-v", "--vocab", help="Required. Path to vocabulary file for bert model.", required=True, type=str)
     args.add_argument("-d", "--device",
                       help="Optional. Specify the target device to infer on; CPU, GPU, FPGA, HDDL, MYRIAD or HETERO: is "
@@ -143,8 +145,6 @@ def squad(bert, examples, features, input_names, output_names,
                     continue
                 n_best_results.append((start_logits[_s_idx] +  end_logits[_e_idx], 
                     "".join(examples[question_number].doc_tokens[feature.token_to_orig_map[_s_idx]:feature.token_to_orig_map[_e_idx] + 1])))
-                # print (feature.token_to_orig_map[_s_idx], feature.token_to_orig_map[_e_idx])
-        # print (n_best_results)
 
     max_prob = -100000
     best_result = ""
@@ -288,17 +288,19 @@ def main():
     log.info(output_info_text)
 
     # tokenization for bert
-    examples, features = tokenization_utils.export_feature(
+    paragraph_text = open(args.input, "r").read()[:-1]
+    examples, features = tokenization_utils.export_feature_from_text(
         vocab_file = args.vocab, 
-        data_file = args.input, 
+        paragraph_text = paragraph_text, 
+        question_text = args.question,
         do_lower_case = False, 
         max_seq_length = args.max_seq_length, 
         doc_stride = args.doc_stride, 
         max_query_length = args.max_query_length, 
     )
-    
-    print ("Content: ", "".join(examples[args.question_number].doc_tokens))
-    print ("Question: ", examples[args.question_number].question_text)
+
+    print ("Content: ", "".join(examples[0].doc_tokens))
+    print ("Question: ", examples[0].question_text)
     
     with open(os.path.join('./vocab/','vocab_pinyin.txt')) as F:
         py_vocab = F.read().split('\n')
