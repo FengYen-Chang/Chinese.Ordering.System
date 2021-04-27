@@ -58,12 +58,21 @@ def build_argparser():
                            "value is CPU",
                       default="CPU", type=str)
     
-    args.add_argument("--max-seq-length", type=int, default=256)
-    args.add_argument("--doc-stride", type=int, default=128)
-    args.add_argument("--max-query-length", type=int, default=64)
-    args.add_argument("-qn", "--question_number", default=0, type=int)
-    args.add_argument("-mal", "--max_answer_length", default=30, type=int)
-    args.add_argument("-nbest", "--num_of_best_set", default=10, type=int)
+    args.add_argument("--max-seq-length", 
+                      help="Optional. The maximum total input sequence length after WordPiece tokenization. "
+                      , default=256, type=int)
+    args.add_argument("--doc-stride", 
+                      help="Optional.When splitting up a long document into chunks, how much stride to "
+                      "take between chunks.", default=128, type=int)
+    args.add_argument("--max-query-length", 
+                      help="Optional. The maximum number of tokens for the question. Questions longer than "
+                      "this will be truncated to this length.", default=64, type=int)
+    args.add_argument("-qn", "--question_number", 
+                      help="Optional. The number for select the question from the input file.", default=0, type=int)
+    args.add_argument("-mal", "--max_answer_length", 
+                      help="Optional. The maximum length of an answer that can be generated.", default=30, type=int)
+    args.add_argument("-nbest", "--num_of_best_set", 
+                      help="Optional. The number for n-best predictions to generate the final result", default=10, type=int)
 
     return parser
 
