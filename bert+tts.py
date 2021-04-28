@@ -28,7 +28,6 @@ import utils
 
 from openvino.inference_engine import IECore
 import scipy.io.wavfile as wavfile
-import tokenization_utils
 
 
 def build_argparser():
@@ -286,7 +285,7 @@ def main():
 
     # tokenization for bert
     paragraph_text = open(args.input, "r").read()[:-1]
-    examples, features = tokenization_utils.export_feature_from_text(
+    examples, features = utils.tokenization_utils.export_feature_from_text(
         vocab_file = args.vocab, 
         paragraph_text = paragraph_text, 
         question_text = args.question,

@@ -2,7 +2,7 @@ import collections
 import logging
 import json
 import six
-import tokenization
+from . import tokenization
 
 
 class SquadExample(object):
