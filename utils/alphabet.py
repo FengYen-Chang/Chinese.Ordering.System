@@ -36,6 +36,9 @@ def get_default_alphabet():
     ]
     return default_alphabet_characters
 
+def get_default_CN_alphabet():
+    default_alphabet_CN_characters = [('0' + hex(_l + 1)[2:]) if _l < 15 else (hex(_l + 1)[2:]) for _l in range(255)]
+    return default_alphabet_CN_characters
 
 class CtcdecoderAlphabet:
     def __init__(self, characters):

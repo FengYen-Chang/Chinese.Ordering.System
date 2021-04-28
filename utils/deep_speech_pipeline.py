@@ -45,6 +45,19 @@ PROFILES = {
         num_mfcc_dct_coefs = 26,
         num_context_frames = 19,
     ),
+    'mds09x_cn': dict(
+        alphabet = alphabet_module.get_default_CN_alphabet(),
+        alpha = 0.6940122363709647,
+        beta =4.777924224113021,
+        model_sampling_rate = 16000,
+        frame_window_size_seconds = 32e-3,
+        frame_stride_seconds = 20e-3,
+        mel_num = 40,
+        mel_fmin = 20.,
+        mel_fmax = 8000.,
+        num_mfcc_dct_coefs = 26,
+        num_context_frames = 19,
+    ),
 }
 PROFILES['mds08x_en'] = PROFILES['mds07x_en']
 
