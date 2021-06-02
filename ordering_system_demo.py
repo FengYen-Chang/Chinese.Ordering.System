@@ -291,6 +291,7 @@ def main():
     exec_bert_net = ie.load_network(network=bert_net, device_name=args.device)
 
     # STT
+    log.info("Start STT")
     profile = get_profile(args.profile)
 
     stt = DeepSpeechPipeline(
@@ -317,6 +318,7 @@ def main():
 
     for candidate in transcription:
         if ('cn' in args.profile):
+            print (candidate['text'])
             candidate['text'] = bytes.fromhex(candidate['text']).decode('utf-8')
         print("{}\t{}".format(candidate['conf'], candidate['text'],))
 

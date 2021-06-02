@@ -31,7 +31,7 @@ import scipy.io.wavfile as wavfile
 
 
 def build_argparser():
-    parser = ArgumentParser(add_help=False)
+    parser = ArgumentParser(add_help=False, description="BERT w/ TTS demo")
     args = parser.add_argument_group('Options')
     args.add_argument('-h', '--help', action='help', default=SUPPRESS, help='Show this help message and exit.')
     args.add_argument("-m_mel", "--model_mel", help="Required. Path to an .xml file with a trained mel model.", required=True,
