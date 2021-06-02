@@ -73,7 +73,7 @@ Options:
     ```sh
     export MODEL_DIR=/path/to/IR/model/directory
 
-    python tts.py 
+    python tts.py                                   \
         -m_mel  ${MODEL_DIR}/mel.xml                \
         -m_mg   ${MODEL_DIR}/melgan.xml             \
         -m_e    ${MODEL_DIR}/encoder.xml            \
@@ -164,7 +164,7 @@ Options:
                         Required. Path to an .xml file with a trained bert
                         model.
   -i INPUT, --input INPUT
-                        Required. Path to a json file w/ describe and
+                        Required. Path to a json file w/ description and
                         question.
   -v VOCAB, --vocab VOCAB
                         Required. Path to vocablary file for bert model.
@@ -183,7 +183,7 @@ Options:
 
 #### Running Inference
 
-* Input file mc_menu.json:
+* Input file `mc_menu.json`:
 
     ```json
     {
@@ -218,13 +218,13 @@ Options:
     ```sh
     export MODEL_DIR=/path/to/IR/model/directory
 
-    python bert+tts.py 
+    python bert+tts.py                              \
         -m_mel  ${MODEL_DIR}/mel.xml                \
         -m_mg   ${MODEL_DIR}/melgan.xml             \
         -m_e    ${MODEL_DIR}/encoder.xml            \
         -m_d    ${MODEL_DIR}/decoder.xml            \
         -m_dp   ${MODEL_DIR}/duration_predictor.xml \
-        -m_b    ${MODEL_DIR}/bert.xml               \ 
+        -m_b    ${MODEL_DIR}/bert.xml               \
         -i mc_menu.json                             \
         -v vocab/vocab_bert.txt
     ```
