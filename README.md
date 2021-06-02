@@ -9,13 +9,157 @@ for Chinese. By this system, user can order a meal with voice and the ordering s
 
 ### Enable Each Components
 
-Please check below page to enable it. Based on these pages, you can get the converted IR model and you can follow next section to execute it with converted IR model.
+Please check below pages to enable it. Based on these pages, you can get the converted IR model and you can follow next section to execute it with converted IR model.
 
 * [Speech Recognition System](./SpeechRecognition.md)
 * [Question Answering System](./QuestionAnswering.md)
 * [Voice Synthesize System](./VoiceSynthesize.md) 
 
 ### Run Ordering System
+
+To run the ordering system demo, you can run 2 script, `ordering_system_demo_pipeline.py` and `ordering_system_demo.py`, for demo. In here, we recommand to run the `ordering_system_demo_pipeline.py`.
+
+```sh
+usage: ordering_system_demo_pipeline.py [-h] -m_mel MODEL_MEL -m_mg
+                                        MODEL_MELGAN -m_d MODEL_DECODER -m_e
+                                        MODEL_ENCODER -m_dp
+                                        MODEL_DURATION_PREDICTOR -m_b
+                                        MODEL_BERT -m_a MODEL_AUDIO
+                                        [-L FILENAME] -i INPUT -p NAME -para
+                                        PARAGRAPH -v_b VOCAB_BERT -v_p
+                                        VOCAB_PINYIN [-d DEVICE] [-b N] [-c N]
+                                        [--max-seq-length MAX_SEQ_LENGTH]
+                                        [--doc-stride DOC_STRIDE]
+                                        [--max-query-length MAX_QUERY_LENGTH]
+                                        [-mal MAX_ANSWER_LENGTH]
+                                        [-nbest NUM_OF_BEST_SET] [-l FILENAME]
+
+Ordering System demo
+
+Options:
+  -h, --help            Show this help message and exit.
+  -m_mel MODEL_MEL, --model-mel MODEL_MEL
+                        Required. Path to an .xml file with a trained mel
+                        model.
+  -m_mg MODEL_MELGAN, --model-melgan MODEL_MELGAN
+                        Required. Path to an .xml file with a trained mel gan
+                        model.
+  -m_d MODEL_DECODER, --model-decoder MODEL_DECODER
+                        Required. Path to an .xml file with a trained decoder
+                        model.
+  -m_e MODEL_ENCODER, --model-encoder MODEL_ENCODER
+                        Required. Path to an .xml file with a trained encoder
+                        model.
+  -m_dp MODEL_DURATION_PREDICTOR, --model-duration_predictor MODEL_DURATION_PREDICTOR
+                        Required. Path to an .xml file with a trained duration
+                        predictor model.
+  -m_b MODEL_BERT, --model-bert MODEL_BERT
+                        Required. Path to an .xml file with a trained bert
+                        model.
+  -m_a MODEL_AUDIO, --model-audio MODEL_AUDIO
+                        Required. Path to an .xml file with a trained audio
+                        model.
+  -L FILENAME, --lm FILENAME
+                        path to language model file (optional)
+  -i INPUT, --input INPUT
+                        Required. Path to a 16k .wav file for audio model.
+  -p NAME, --profile NAME
+                        Choose pre/post-processing profile: mds06x_en for
+                        Mozilla DeepSpeech v0.6.x, mds07x_en or mds08x_en for
+                        Mozilla DeepSpeech v0.7.x/x0.8.x, mds09x_cn for
+                        Mozilla DeepSpeech v0.9.x Chinese Model, other:
+                        filename of a YAML file (required)
+  -para PARAGRAPH, --paragraph PARAGRAPH
+                        Required. Path to a .txt file w/ paragraph for bert.
+  -v_b VOCAB_BERT, --vocab-bert VOCAB_BERT
+                        Required. Path to vocabulary file for bert model.
+  -v_p VOCAB_PINYIN, --vocab-pinyin VOCAB_PINYIN
+                        Required. Path to pinyin vocabulary file for TTS
+                        model.
+  -d DEVICE, --device DEVICE
+                        Optional. Specify the target device to infer on; CPU,
+                        GPU, FPGA, HDDL, MYRIAD or HETERO: is acceptable. The
+                        sample will look for a suitable plugin for device
+                        specified. Default value is CPU
+  -b N, --beam-width N  Beam width for beam search in CTC decoder (default
+                        500)
+  -c N, --max-candidates N
+                        Show top N (or less) candidates (default 1)
+  --max-seq-length MAX_SEQ_LENGTH
+                        Optional. The maximum total input sequence length
+                        after WordPiece tokenization.
+  --doc-stride DOC_STRIDE
+                        Optional.When splitting up a long document into
+                        chunks, how much stride to take between chunks.
+  --max-query-length MAX_QUERY_LENGTH
+                        Optional. The maximum number of tokens for the
+                        question. Questions longer than this will be truncated
+                        to this length.
+  -mal MAX_ANSWER_LENGTH, --max_answer_length MAX_ANSWER_LENGTH
+                        Optional. The maximum length of an answer that can be
+                        generated.
+  -nbest NUM_OF_BEST_SET, --num_of_best_set NUM_OF_BEST_SET
+                        Optional. The number for n-best predictions to
+                        generate the final result
+  -l FILENAME, --cpu_extension FILENAME
+                        Optional. Required for CPU custom layers. MKLDNN
+                        (CPU)-targeted custom layers. Absolute path to a
+                        shared library with the kernels implementations.
+```
+
+#### Running Inference
+
+* Run inference:
+    
+    ```sh
+    export MODEL_DIR=/path/to/IR/model/directory
+    export VOCAB_DIR=/path/to/vocabulary/directory
+    
+    python ordering_system_demo_pipeline.py                       \
+        -m_mel  ${MODEL_DIR}/mel.xml                              \
+        -m_mg   ${MODEL_DIR}/melgan.xml                           \
+        -m_d    ${MODEL_DIR}/decoder.xml                          \
+        -m_e    ${MODEL_DIR}/encoder.xml                          \
+        -m_dp   ${MODEL_DIR}/duration_predictor.xml               \
+        -m_b    ${MODEL_DIR}/bert.xml                             \
+        -m_a    ${MODEL_DIR}/deepspeech-0.9.3-models-zh-CN.xml    \
+        -p mds09x_cn                                              \
+        -para ${PARAGRAPH_FILE}                                   \
+        -i ${WAVE_FILE}                                           \
+        -v_b ${VOCAB_DIR}/vocab_bert.txt                          \
+        -v_p ${VOCAB_DIR}/vocab_pinyin.txt
+    ```
+
+* Output:
+
+    ```sh
+    10.019194602966309      圧亦克都少前
+    [INFO] 2021-06-02 11:18:45,598 Load 1 examples
+    Content:  麦当劳目前的餐点有：大麦克价格为72元、双层牛肉吉事堡价格为62元、嫩煎鸡腿堡价格为82元、麦香鸡价格为44元、麦克鸡块(6块)价格为60元、麦克鸡块(10块)价格为100元、劲辣鸡腿堡价格为72元、麦脆鸡腿(2块)价格为110元、麦脆鸡翅(2块)价格为90元、黄金起司猪排堡价格为52元、麦香鱼价格为44元、烟熏鸡肉长堡价格为74元、姜烧猪肉长堡价格为74元、BLT安格斯黑牛堡价格为109元、BLT辣脆鸡腿堡价格为109元、BLT嫩煎鸡腿堡价格为109元、蕈菇安格斯黑牛堡价格为119元、凯萨脆鸡沙拉价格为99元和义式烤鸡沙拉价格为99元。
+    Question:  大麦克多少钱
+    七十二元
+    Building prefix dict from the default dictionary ...
+    [DEBUG] 2021-06-02 11:18:45,648 Building prefix dict from the default dictionary ...
+    Loading model from cache /tmp/jieba.cache
+    [DEBUG] 2021-06-02 11:18:45,649 Loading model from cache /tmp/jieba.cache
+    Loading model cost 0.425 seconds.
+    [DEBUG] 2021-06-02 11:18:46,073 Loading model cost 0.425 seconds.
+    Prefix dict has been built successfully.
+    [DEBUG] 2021-06-02 11:18:46,073 Prefix dict has been built successfully.
+    /usr/lib/python3/dist-packages/apport/report.py:13: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+      import fnmatch, glob, traceback, errno, sys, atexit, locale, imp
+    ValueError: Unknown Blob precision: BOOL
+    Exception ignored in: 'openvino.inference_engine.ie_api.BlobBuffer._get_blob_format'
+    ValueError: Unknown Blob precision: BOOL
+    ValueError: Unknown Blob precision: BOOL
+    Exception ignored in: 'openvino.inference_engine.ie_api.BlobBuffer._get_blob_format'
+    ValueError: Unknown Blob precision: BOOL
+    ValueError: Unknown Blob precision: BOOL
+    Exception ignored in: 'openvino.inference_engine.ie_api.BlobBuffer._get_blob_format'
+    ValueError: Unknown Blob precision: BOOL
+    [INFO] 2021-06-02 11:18:46,902 Generated tts.wav.
+    [INFO] 2021-06-02 11:18:46,902 This sample is an API example, for any performance measurements please use the dedicated benchmark_app tool
+    ```
 
 ### Execute Question Answering System
 
