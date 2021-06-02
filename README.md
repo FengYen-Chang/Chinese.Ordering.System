@@ -1,4 +1,11 @@
-# Chinese Ordering System
+# Chinese Ordering System 
+
+**Notice:**
+ * **Thie reposiotry still under develop.**
+    * Still debug the Chinese language model for speech recognize model.
+ * Please pay attention to the speech recognize model of license, **Mozilla Public License 2.0**.
+
+
 
 This is an ordering system wihch based on the 
 * [Speech Recognition System](./SpeechRecognition.md),
