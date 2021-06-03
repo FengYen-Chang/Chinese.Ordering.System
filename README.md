@@ -3,6 +3,7 @@
 **Notice:**
  * **Thie reposiotry still under develop.**
     * Still debug the Chinese language model for speech recognize model.
+    * Will upload the model conversation method of Chinese language model and speech recognize model.
  * Please pay attention to the speech recognize model of license, **Mozilla Public License 2.0**.
 
 
