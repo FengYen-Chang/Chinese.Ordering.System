@@ -12,7 +12,7 @@ from . import impl as ctc_decode
 
 class CTCBeamDecoder(object):
     def __init__(self, labels, model_path=None, alpha=0, beta=0, cutoff_top_n=40, cutoff_prob=1.0, beam_width=100,
-                 max_candidates_per_batch=None, num_processes=4, blank_id=0, log_probs_input=False, loader='yoklm'):
+                 max_candidates_per_batch=None, num_processes=4, blank_id=0, log_probs_input=False, loader='yoklm', is_CN=False):
         self.cutoff_top_n = cutoff_top_n
         self._beam_width = beam_width
         self._max_candidates_per_batch = max_candidates_per_batch
@@ -21,9 +21,10 @@ class CTCBeamDecoder(object):
         self._labels = list(labels)
         self._blank_id = blank_id
         self._log_probs = bool(log_probs_input)
+        self._is_CN = is_CN
         if model_path is not None:
             if loader == 'yoklm':
-                self._scorer = ctc_decode.create_scorer_yoklm(alpha, beta, model_path, self._labels)
+                self._scorer = ctc_decode.create_scorer_yoklm(alpha, beta, model_path, self._labels, self._is_CN)
             else:
                 raise ValueError("Unknown loader type: \"%s\"" % loader)
         self._cutoff_prob = cutoff_prob
@@ -48,6 +49,7 @@ class CTCBeamDecoder(object):
             self.cutoff_top_n,
             self._blank_id,
             self._log_probs,  # log_input, bool
+            self._is_CN,
             self._scorer,
         )
 

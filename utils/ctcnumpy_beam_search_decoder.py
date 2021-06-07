@@ -11,7 +11,7 @@ from utils.alphabet import CtcdecoderAlphabet
 class CtcnumpyBeamSearchDecoder:
     def __init__(self, alphabet, beam_size, max_candidates=None,
             cutoff_prob=1.0, cutoff_top_n=40,
-            scorer_lm_fname=None, alpha=0.75, beta=1.85):
+            scorer_lm_fname=None, alpha=0.75, beta=1.85, is_CN=False):
         if isinstance(alphabet, list):
             alphabet = CtcdecoderAlphabet(alphabet)
         self.alphabet = alphabet
@@ -20,6 +20,8 @@ class CtcnumpyBeamSearchDecoder:
         self.max_candidates = max_candidates
         self.cutoff_prob = cutoff_prob
         self.cutoff_top_n = cutoff_top_n
+
+        self.is_CN = is_CN
 
         self.decoder_state = ctcdecode_numpy.CTCBeamDecoder(
             alphabet.characters + [''],  # labels
@@ -31,6 +33,7 @@ class CtcnumpyBeamSearchDecoder:
             beam_width = beam_size,
             max_candidates_per_batch = max_candidates,
             blank_id = len(alphabet.characters),
+            is_CN = is_CN,
         )
 
     def decode(self, probs):

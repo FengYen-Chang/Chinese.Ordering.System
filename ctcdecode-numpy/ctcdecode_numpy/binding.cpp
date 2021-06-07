@@ -34,6 +34,7 @@ void numpy_beam_decode(
         size_t cutoff_top_n,
         size_t blank_id,
         bool log_input,
+	bool is_CN,
         void *scorer,
         // Output arrays (SWIG memory managed argout, malloc() allocator):
         // (here cand_size = max(beam_size, max_candidates_per_batch) )
@@ -72,9 +73,22 @@ void numpy_beam_decode(
         probs_vec.emplace_back(std::move(probs_one_batch));
     }
 
-    std::vector<std::vector<std::pair<float, Output> > > batch_results =
-        ctc_beam_search_decoder_batch(probs_vec, labels, beam_size, num_processes,
-            cutoff_prob, cutoff_top_n, blank_id, log_input, ext_scorer);
+    if (is_CN)
+    {
+        std::vector<std::string> CN_labels;
+        size_t size_ = 255;
+        for (size_t i = 0; i < size_; ++i) {
+            std::string val(1, i+1);
+            CN_labels.push_back(val);
+        }
+	std::vector<std::vector<std::pair<float, Output> > > batch_results =
+            ctc_beam_search_decoder_batch(probs_vec, CN_labels, beam_size, num_processes,
+                cutoff_prob, cutoff_top_n, blank_id, log_input, ext_scorer);
+    } else {
+        std::vector<std::vector<std::pair<float, Output> > > batch_results =
+            ctc_beam_search_decoder_batch(probs_vec, labels, beam_size, num_processes,
+                cutoff_prob, cutoff_top_n, blank_id, log_input, ext_scorer);
+    }
 
     if (batch_results.size() != batch_size)
         throw std::runtime_error("numpy_beam_decode: internal error: output batch size differs from input batch size");
@@ -142,9 +156,21 @@ void* create_scorer_yoklm(
         double alpha,
         double beta,
         const std::string& lm_path,
-        const std::vector<std::string>& labels)
+        const std::vector<std::string>& labels,
+	bool is_CN)
 {
-    ScorerBase* scorer = new ScorerYoklm(alpha, beta, lm_path, labels);
+    if (is_CN)
+    {
+	std::vector<std::string> CN_labels;
+        size_t size_ = 255;
+        for (size_t i = 0; i < size_; ++i) {
+            std::string val(1, i+1);
+            CN_labels.push_back(val);
+        }
+        ScorerBase* scorer = new ScorerYoklm(alpha, beta, lm_path, CN_labels);
+    } else {
+        ScorerBase* scorer = new ScorerYoklm(alpha, beta, lm_path, labels);
+    }
     return static_cast<void*>(scorer);
 }
 

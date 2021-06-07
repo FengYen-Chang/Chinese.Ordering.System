@@ -17,6 +17,7 @@ void numpy_beam_decode(
         size_t cutoff_top_n,
         size_t blank_id,
         bool log_input,
+	bool is_CN,
         void *scorer,
         // Output arrays (SWIG memory managed argout, malloc() allocator):
         int ** tokens, size_t * tokens_dim,  // to be reshaped to (batch_size, beam_size, -1)
@@ -28,7 +29,8 @@ void* create_scorer_yoklm(
         double alpha,
         double beta,
         const std::string& lm_path,
-        const std::vector<std::string>& labels);
+        const std::vector<std::string>& labels,
+	bool is_CN);
 
 void delete_scorer(void* scorer);
 

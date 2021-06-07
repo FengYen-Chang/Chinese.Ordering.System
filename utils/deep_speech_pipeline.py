@@ -57,6 +57,7 @@ PROFILES = {
         mel_fmax = 8000.,
         num_mfcc_dct_coefs = 26,
         num_context_frames = 19,
+        is_CN = True,
     ),
 }
 PROFILES['mds08x_en'] = PROFILES['mds07x_en']
@@ -112,11 +113,16 @@ class DeepSpeechPipeline:
         self.net = self.exec_net = None
         self.default_device = device
 
+        if 'is_CN' in self.p:
+            self.is_CN = self.p['is_CN']
+        else :
+            self.is_CN = False
+
         self.ie = ie if ie is not None else IECore()
         self._load_net(model, model_bin_fname=model_bin, device=device, ie_extensions=ie_extensions)
 
         self.decoder = CtcnumpyBeamSearchDecoder(self.alphabet, self.beam_width, max_candidates=max_candidates,
-            scorer_lm_fname=lm, alpha=self.p['alpha'], beta=self.p['beta'])
+            scorer_lm_fname=lm, alpha=self.p['alpha'], beta=self.p['beta'], is_CN = self.is_CN)
 
         if device is not None:
             self.activate_model(device)
