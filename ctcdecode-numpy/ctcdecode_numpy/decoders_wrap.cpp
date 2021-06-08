@@ -8519,15 +8519,16 @@ SWIGINTERN PyObject *_wrap_numpy_beam_decode(PyObject *SWIGUNUSEDPARM(self), PyO
   size_t arg12 ;
   size_t arg13 ;
   bool arg14 ;
-  void *arg15 = (void *) 0 ;
-  int **arg16 = (int **) 0 ;
-  size_t *arg17 = (size_t *) 0 ;
-  int **arg18 = (int **) 0 ;
-  size_t *arg19 = (size_t *) 0 ;
-  float **arg20 = (float **) 0 ;
-  size_t *arg21 = (size_t *) 0 ;
-  int **arg22 = (int **) 0 ;
-  size_t *arg23 = (size_t *) 0 ;
+  bool arg15 ;
+  void *arg16 = (void *) 0 ;
+  int **arg17 = (int **) 0 ;
+  size_t *arg18 = (size_t *) 0 ;
+  int **arg19 = (int **) 0 ;
+  size_t *arg20 = (size_t *) 0 ;
+  float **arg21 = (float **) 0 ;
+  size_t *arg22 = (size_t *) 0 ;
+  int **arg23 = (int **) 0 ;
+  size_t *arg24 = (size_t *) 0 ;
   PyArrayObject *array1 = NULL ;
   int is_new_object1 = 0 ;
   PyArrayObject *array5 = NULL ;
@@ -8546,15 +8547,17 @@ SWIGINTERN PyObject *_wrap_numpy_beam_decode(PyObject *SWIGUNUSEDPARM(self), PyO
   int ecode13 = 0 ;
   bool val14 ;
   int ecode14 = 0 ;
-  int res15 ;
-  int *data_temp16 = NULL ;
-  size_t dim_temp16 ;
-  int *data_temp18 = NULL ;
-  size_t dim_temp18 ;
-  float *data_temp20 = NULL ;
-  size_t dim_temp20 ;
-  int *data_temp22 = NULL ;
-  size_t dim_temp22 ;
+  bool val15 ;
+  int ecode15 = 0 ;
+  int res16 ;
+  int *data_temp17 = NULL ;
+  size_t dim_temp17 ;
+  int *data_temp19 = NULL ;
+  size_t dim_temp19 ;
+  float *data_temp21 = NULL ;
+  size_t dim_temp21 ;
+  int *data_temp23 = NULL ;
+  size_t dim_temp23 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -8566,24 +8569,25 @@ SWIGINTERN PyObject *_wrap_numpy_beam_decode(PyObject *SWIGUNUSEDPARM(self), PyO
   PyObject * obj8 = 0 ;
   PyObject * obj9 = 0 ;
   PyObject * obj10 = 0 ;
+  PyObject * obj11 = 0 ;
   
   {
-    arg16 = &data_temp16;
-    arg17 = &dim_temp16;
+    arg17 = &data_temp17;
+    arg18 = &dim_temp17;
   }
   {
-    arg18 = &data_temp18;
-    arg19 = &dim_temp18;
+    arg19 = &data_temp19;
+    arg20 = &dim_temp19;
   }
   {
-    arg20 = &data_temp20;
-    arg21 = &dim_temp20;
+    arg21 = &data_temp21;
+    arg22 = &dim_temp21;
   }
   {
-    arg22 = &data_temp22;
-    arg23 = &dim_temp22;
+    arg23 = &data_temp23;
+    arg24 = &dim_temp23;
   }
-  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOO:numpy_beam_decode",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOOO:numpy_beam_decode",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10,&obj11)) SWIG_fail;
   {
     npy_intp size[3] = {
       -1, -1, -1 
@@ -8653,25 +8657,30 @@ SWIGINTERN PyObject *_wrap_numpy_beam_decode(PyObject *SWIGUNUSEDPARM(self), PyO
     SWIG_exception_fail(SWIG_ArgError(ecode14), "in method '" "numpy_beam_decode" "', argument " "14"" of type '" "bool""'");
   } 
   arg14 = static_cast< bool >(val14);
-  res15 = SWIG_ConvertPtr(obj10,SWIG_as_voidptrptr(&arg15), 0, 0);
-  if (!SWIG_IsOK(res15)) {
-    SWIG_exception_fail(SWIG_ArgError(res15), "in method '" "numpy_beam_decode" "', argument " "15"" of type '" "void *""'"); 
+  ecode15 = SWIG_AsVal_bool(obj10, &val15);
+  if (!SWIG_IsOK(ecode15)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode15), "in method '" "numpy_beam_decode" "', argument " "15"" of type '" "bool""'");
+  } 
+  arg15 = static_cast< bool >(val15);
+  res16 = SWIG_ConvertPtr(obj11,SWIG_as_voidptrptr(&arg16), 0, 0);
+  if (!SWIG_IsOK(res16)) {
+    SWIG_exception_fail(SWIG_ArgError(res16), "in method '" "numpy_beam_decode" "', argument " "16"" of type '" "void *""'"); 
   }
-  numpy_beam_decode((float const *)arg1,arg2,arg3,arg4,(int const *)arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12,arg13,arg14,arg15,arg16,arg17,arg18,arg19,arg20,arg21,arg22,arg23);
+  numpy_beam_decode((float const *)arg1,arg2,arg3,arg4,(int const *)arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12,arg13,arg14,arg15,arg16,arg17,arg18,arg19,arg20,arg21,arg22,arg23,arg24);
   resultobj = SWIG_Py_Void();
   {
     npy_intp dims[1] = {
-      *arg17 
+      *arg18 
     };
-    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_INT, (void*)(*arg16));
+    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_INT, (void*)(*arg17));
     PyArrayObject* array = (PyArrayObject*) obj;
     
     if (!array) SWIG_fail;
     
 #ifdef SWIGPY_USE_CAPSULE
-    PyObject* cap = PyCapsule_New((void*)(*arg16), SWIGPY_CAPSULE_NAME, free_cap);
+    PyObject* cap = PyCapsule_New((void*)(*arg17), SWIGPY_CAPSULE_NAME, free_cap);
 #else
-    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg16), free);
+    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg17), free);
 #endif
     
 #if NPY_API_VERSION < 0x00000007
@@ -8684,17 +8693,17 @@ SWIGINTERN PyObject *_wrap_numpy_beam_decode(PyObject *SWIGUNUSEDPARM(self), PyO
   }
   {
     npy_intp dims[1] = {
-      *arg19 
+      *arg20 
     };
-    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_INT, (void*)(*arg18));
+    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_INT, (void*)(*arg19));
     PyArrayObject* array = (PyArrayObject*) obj;
     
     if (!array) SWIG_fail;
     
 #ifdef SWIGPY_USE_CAPSULE
-    PyObject* cap = PyCapsule_New((void*)(*arg18), SWIGPY_CAPSULE_NAME, free_cap);
+    PyObject* cap = PyCapsule_New((void*)(*arg19), SWIGPY_CAPSULE_NAME, free_cap);
 #else
-    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg18), free);
+    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg19), free);
 #endif
     
 #if NPY_API_VERSION < 0x00000007
@@ -8707,17 +8716,17 @@ SWIGINTERN PyObject *_wrap_numpy_beam_decode(PyObject *SWIGUNUSEDPARM(self), PyO
   }
   {
     npy_intp dims[1] = {
-      *arg21 
+      *arg22 
     };
-    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_FLOAT, (void*)(*arg20));
+    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_FLOAT, (void*)(*arg21));
     PyArrayObject* array = (PyArrayObject*) obj;
     
     if (!array) SWIG_fail;
     
 #ifdef SWIGPY_USE_CAPSULE
-    PyObject* cap = PyCapsule_New((void*)(*arg20), SWIGPY_CAPSULE_NAME, free_cap);
+    PyObject* cap = PyCapsule_New((void*)(*arg21), SWIGPY_CAPSULE_NAME, free_cap);
 #else
-    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg20), free);
+    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg21), free);
 #endif
     
 #if NPY_API_VERSION < 0x00000007
@@ -8730,17 +8739,17 @@ SWIGINTERN PyObject *_wrap_numpy_beam_decode(PyObject *SWIGUNUSEDPARM(self), PyO
   }
   {
     npy_intp dims[1] = {
-      *arg23 
+      *arg24 
     };
-    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_INT, (void*)(*arg22));
+    PyObject* obj = PyArray_SimpleNewFromData(1, dims, NPY_INT, (void*)(*arg23));
     PyArrayObject* array = (PyArrayObject*) obj;
     
     if (!array) SWIG_fail;
     
 #ifdef SWIGPY_USE_CAPSULE
-    PyObject* cap = PyCapsule_New((void*)(*arg22), SWIGPY_CAPSULE_NAME, free_cap);
+    PyObject* cap = PyCapsule_New((void*)(*arg23), SWIGPY_CAPSULE_NAME, free_cap);
 #else
-    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg22), free);
+    PyObject* cap = PyCObject_FromVoidPtr((void*)(*arg23), free);
 #endif
     
 #if NPY_API_VERSION < 0x00000007
@@ -8787,19 +8796,23 @@ SWIGINTERN PyObject *_wrap_create_scorer_yoklm(PyObject *SWIGUNUSEDPARM(self), P
   double arg2 ;
   std::string *arg3 = 0 ;
   std::vector< std::string,std::allocator< std::string > > *arg4 = 0 ;
+  bool arg5 ;
   double val1 ;
   int ecode1 = 0 ;
   double val2 ;
   int ecode2 = 0 ;
   int res3 = SWIG_OLDOBJ ;
   int res4 = SWIG_OLDOBJ ;
+  bool val5 ;
+  int ecode5 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
   void *result = 0 ;
   
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:create_scorer_yoklm",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:create_scorer_yoklm",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
   ecode1 = SWIG_AsVal_double(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "create_scorer_yoklm" "', argument " "1"" of type '" "double""'");
@@ -8832,7 +8845,12 @@ SWIGINTERN PyObject *_wrap_create_scorer_yoklm(PyObject *SWIGUNUSEDPARM(self), P
     }
     arg4 = ptr;
   }
-  result = (void *)create_scorer_yoklm(arg1,arg2,(std::string const &)*arg3,(std::vector< std::string,std::allocator< std::string > > const &)*arg4);
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "create_scorer_yoklm" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  result = (void *)create_scorer_yoklm(arg1,arg2,(std::string const &)*arg3,(std::vector< std::string,std::allocator< std::string > > const &)*arg4,arg5);
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 |  0 );
   if (SWIG_IsNewObj(res3)) delete arg3;
   if (SWIG_IsNewObj(res4)) delete arg4;

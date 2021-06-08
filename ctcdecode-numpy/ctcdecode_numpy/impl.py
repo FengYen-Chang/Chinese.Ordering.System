@@ -273,12 +273,12 @@ StringVector_swigregister = _impl.StringVector_swigregister
 StringVector_swigregister(StringVector)
 
 
-def numpy_beam_decode(probs, seq_lens, labels, beam_size, max_candidates_per_batch, num_processes, cutoff_prob, cutoff_top_n, blank_id, log_input, scorer):
-    return _impl.numpy_beam_decode(probs, seq_lens, labels, beam_size, max_candidates_per_batch, num_processes, cutoff_prob, cutoff_top_n, blank_id, log_input, scorer)
+def numpy_beam_decode(probs, seq_lens, labels, beam_size, max_candidates_per_batch, num_processes, cutoff_prob, cutoff_top_n, blank_id, log_input, is_CN, scorer):
+    return _impl.numpy_beam_decode(probs, seq_lens, labels, beam_size, max_candidates_per_batch, num_processes, cutoff_prob, cutoff_top_n, blank_id, log_input, is_CN, scorer)
 numpy_beam_decode = _impl.numpy_beam_decode
 
-def create_scorer_yoklm(alpha, beta, lm_path, labels):
-    return _impl.create_scorer_yoklm(alpha, beta, lm_path, labels)
+def create_scorer_yoklm(alpha, beta, lm_path, labels, is_CN):
+    return _impl.create_scorer_yoklm(alpha, beta, lm_path, labels, is_CN)
 create_scorer_yoklm = _impl.create_scorer_yoklm
 
 def delete_scorer(scorer):
