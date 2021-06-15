@@ -13,12 +13,13 @@ from openvino.inference_engine import IECore
 
 import utils.alphabet as alphabet_module
 from utils.audio_features import samples_to_melspectrum, melspectrum_to_mfcc
-from utils.ctcnumpy_beam_search_decoder import CtcnumpyBeamSearchDecoder
+from utils.ds_ctcnumpy_beam_search_decoder import DSCtcnumpyBeamSearchDecoder
 
 
 PROFILES = {
     'mds06x_en': dict(
         alphabet = None,  # the default alphabet
+        alphabet_type = 'Eng', 
         # alpha: Language model weight
         alpha = 0.75,
         # beta: Word insertion bonus (ignored without LM)
@@ -34,6 +35,7 @@ PROFILES = {
     ),
     'mds07x_en': dict(
         alphabet = None,  # the default alphabet
+        alphabet_type = 'Eng', 
         alpha = 0.93128901720047,
         beta = 1.1834137439727783,
         model_sampling_rate = 16000,
@@ -47,6 +49,7 @@ PROFILES = {
     ),
     'mds09x_cn': dict(
         alphabet = alphabet_module.get_default_CN_alphabet(),
+        alphabet_type = 'utf-8',
         alpha = 0.6940122363709647,
         beta =4.777924224113021,
         model_sampling_rate = 16000,
@@ -115,7 +118,7 @@ class DeepSpeechPipeline:
         self.ie = ie if ie is not None else IECore()
         self._load_net(model, model_bin_fname=model_bin, device=device, ie_extensions=ie_extensions)
 
-        self.decoder = CtcnumpyBeamSearchDecoder(self.alphabet, self.beam_width, max_candidates=max_candidates,
+        self.decoder = DSCtcnumpyBeamSearchDecoder(self.p['alphabet_type'], self.beam_width,  max_candidates=max_candidates,
             scorer_lm_fname=lm, alpha=self.p['alpha'], beta=self.p['beta'])
 
         if device is not None:

@@ -1,12 +1,11 @@
 # Chinese Ordering System 
 
 **Notice:**
- * **Thie reposiotry still under develop.**
-    * Still debug the Chinese language model for speech recognize model.
+ * **This reposiotry still under develop.**
+    * Still debug the Chinese language model based on the kenlm Version 5 for speech recognize model.
     * Will upload the model conversation method of Chinese language model and speech recognize model.
+ * Currently, this reposiotry is use `ds_ctcdecoder`version `0.9.3` to replace `ctcdecode_numpy`.
  * Please pay attention to the speech recognize model of license, **Mozilla Public License 2.0**.
-
-
 
 This is an ordering system wihch based on the 
 * [Speech Recognition System](./SpeechRecognition.md),
@@ -15,7 +14,7 @@ This is an ordering system wihch based on the
 
 for Chinese. By this system, user can order a meal with voice and the ordering system will reply the price.
 
-### Enable Each Components
+# Enable Each Components
 
 Please check below pages to enable it. Based on these pages, you can get the converted IR model and you can follow next section to execute it with converted IR model.
 
@@ -23,9 +22,21 @@ Please check below pages to enable it. Based on these pages, you can get the con
 * [Question Answering System](./QuestionAnswering.md)
 * [Voice Synthesize System](./VoiceSynthesize.md) 
 
-### Run Ordering System
+# Run each function
+
+You can use below links to run each function or scroll down this page.
+
+* [Execute Ordering System](#execute-ordering-system)
+* [Execute Speech Recognize System](#execute-speech-recognize-system)
+* [Execute Question Answering System](#execute-question-answering-system)
+* [Execute Voice Synthesize System](#execute-voice-synthesize-system)
+* [Execute Question Answering System with Voice Synthesize System](#execute-question-answering-system-with-voice-synthesize-system)
+
+### Execute Ordering System
 
 To run the ordering system demo, you can run 2 script, `ordering_system_demo_pipeline.py` and `ordering_system_demo.py`, for demo. In here, we recommand to run the `ordering_system_demo_pipeline.py`.
+
+Running the application with the -h option yields the following usage message:
 
 ```sh
 usage: ordering_system_demo_pipeline.py [-h] -m_mel MODEL_MEL -m_mg
@@ -168,6 +179,78 @@ Options:
     [INFO] 2021-06-02 11:18:46,902 Generated tts.wav.
     [INFO] 2021-06-02 11:18:46,902 This sample is an API example, for any performance measurements please use the dedicated benchmark_app tool
     ```
+
+### Execute Speech Recognize System
+
+For speech recognize system, you can run `speech_recognition_demo.py` which is from [OMZ](https://github.com/openvinotoolkit/open_model_zoo) to execute it.
+
+Running the application with the -h option yields the following usage message:
+
+```sh
+python speech_recognition_demo.py -h
+usage: speech_recognition_demo.py [-h] -i FILENAME [-d DEVICE] -m FILENAME
+                                  [-L FILENAME] -p NAME [-b N] [-c N]
+                                  [-l FILENAME]
+
+Speech recognition demo
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i FILENAME, --input FILENAME
+                        Path to an audio file in WAV PCM 16 kHz mono format
+  -d DEVICE, --device DEVICE
+                        Optional. Specify the target device to infer on, for
+                        example: CPU, GPU, FPGA, HDDL, MYRIAD or HETERO. The
+                        sample will look for a suitable IE plugin for this
+                        device. (default is CPU)
+  -m FILENAME, --model FILENAME
+                        Path to an .xml file with a trained model (required)
+  -L FILENAME, --lm FILENAME
+                        path to language model file (optional)
+  -p NAME, --profile NAME
+                        Choose pre/post-processing profile: mds06x_en for
+                        Mozilla DeepSpeech v0.6.x, mds07x_en or mds08x_en for
+                        Mozilla DeepSpeech v0.7.x/x0.8.x, mds09x_cn for
+                        Mozilla DeepSpeech v0.9.x Chinese Model, other:
+                        filename of a YAML file (required)
+  -b N, --beam-width N  Beam width for beam search in CTC decoder (default
+                        500)
+  -c N, --max-candidates N
+                        Show top N (or less) candidates (default 1)
+  -l FILENAME, --cpu_extension FILENAME
+                        Optional. Required for CPU custom layers. MKLDNN
+                        (CPU)-targeted custom layers. Absolute path to a
+                        shared library with the kernels implementations.
+```
+
+#### Running Inference
+
+* Run inference:
+    
+    ```sh
+    export MODEL_DIR=/path/to/IR/model/directory
+    
+    python speech_recognition_demo.py                             \
+        -m ${MODEL_DIR}/deepspeech-0.9.3-models-zh-CN.xml         \
+        -p mds09x_cn                                              \
+        -i ${WAVE_FILE}                                           \
+        -L ${MODEL_DIR}/deepspeech-0.9.3-models-zh-CN.scorer
+    ```
+
+* Output:
+   
+   ```sh
+   Audio file length: 1.9505 s
+   MFCC time: 0.002272702055051923 s
+   100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:00<00:00, 20.24it/s]
+   RNN time: 0.29857360396999866 s
+   Beam search time: 0.24717673601116985 s
+   Overall time: 1.1114037550287321 s
+
+   Transcription and confidence score:
+   -11.274085998535156     大麦克都少前
+   ```
+
 
 ### Execute Question Answering System
 
