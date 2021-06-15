@@ -27,8 +27,7 @@ class DSCtcnumpyBeamSearchDecoder:
                 scorer_path=scorer_lm_fname, alphabet=self.alphabet)
 
         self.beam_size = beam_size
-        # self.max_candidates = max_candidates
-        self.max_candidates = 10
+        self.max_candidates = max_candidates
         self.cutoff_prob = cutoff_prob
         self.cutoff_top_n = cutoff_top_n
 
