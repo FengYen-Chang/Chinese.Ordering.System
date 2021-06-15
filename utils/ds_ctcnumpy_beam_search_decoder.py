@@ -12,11 +12,10 @@ from scipy.special import softmax
 class DSCtcnumpyBeamSearchDecoder:
     def __init__(self, alphabet_type, beam_size, max_candidates=None, cutoff_prob=1.0, cutoff_top_n=40,
             scorer_lm_fname=None, alpha=0.75, beta=1.85):
-        print (alphabet_type )
         if alphabet_type == 'utf-8':
             self.alphabet = ds_ctcdecoder.UTF8Alphabet()
-        # else:
-        #     alphabet = ds_ctcdecoder.Alphabet(os.path.abspath(FLAGS.alphabet_config_path))
+        else:
+            self.alphabet = ds_ctcdecoder.Alphabet('vocab/alphabet.txt')
 
         try:
             self.num_processes = cpu_count()

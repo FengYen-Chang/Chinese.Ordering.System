@@ -19,6 +19,7 @@ from utils.ds_ctcnumpy_beam_search_decoder import DSCtcnumpyBeamSearchDecoder
 PROFILES = {
     'mds06x_en': dict(
         alphabet = None,  # the default alphabet
+        alphabet_type = 'Eng', 
         # alpha: Language model weight
         alpha = 0.75,
         # beta: Word insertion bonus (ignored without LM)
@@ -34,6 +35,7 @@ PROFILES = {
     ),
     'mds07x_en': dict(
         alphabet = None,  # the default alphabet
+        alphabet_type = 'Eng', 
         alpha = 0.93128901720047,
         beta = 1.1834137439727783,
         model_sampling_rate = 16000,
