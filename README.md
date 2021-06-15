@@ -5,6 +5,9 @@
     * Still debug the Chinese language model based on the kenlm Version 5 for speech recognize model.
     * Will upload the model conversation method of Chinese language model and speech recognize model.
  * Currently, this reposiotry is use `ds_ctcdecoder`version `0.9.3` to replace `ctcdecode_numpy`.
+   ```sh
+   pip install ds-ctcdecoder=0.9.3
+   ```
  * Please pay attention to the speech recognize model of license, **Mozilla Public License 2.0**.
 
 This is an ordering system wihch based on the 
