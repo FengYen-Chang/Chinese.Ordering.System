@@ -75,17 +75,17 @@ def synthesize(decoder, encoder, duration_predictor, mel,
                py_text_seq, cn_text_seq, 
             #    variance_adaptor=variance_adaptor, 
                real_len=None, duration_control=1.0,prefix=''):
-    def expand(batch, predicted):
+    def expand(batch, predicted, max_length=200):
         out = list()
 
         for i, vec in enumerate(batch):
             expand_size = predicted[i].item()
+            print (expand_size)
             # out.append(vec.expand(int(expand_size), -1))
             out.append(np.broadcast_to(vec, (int(expand_size), 256)))
         out = np.concatenate(out, 0)
         ori_len = out.shape[0]
-        out = np.concatenate((out, np.zeros((200 - out.shape[0], out.shape[1]), dtype=np.float32)), 0)
-
+        out = np.concatenate((out, np.zeros((max_length - out.shape[0] % max_length, out.shape[1]), dtype=np.float32)), 0)
         return out, ori_len
     
     def LR(x, duration, max_len=None):
@@ -106,17 +106,35 @@ def synthesize(decoder, encoder, duration_predictor, mel,
     duration_mean = 18.877746355061273
     mel_mean = -6.0304103
 
+    max_input_len = 10
+
+    # fill inputs
+    cn_text_seq = np.pad(cn_text_seq, ((0, 0), (0, (max_input_len - real_len % max_input_len))), 
+                    mode='constant', constant_values=cn_text_seq[0][0])
+    py_text_seq = np.pad(py_text_seq, ((0, 0), (0, (max_input_len - real_len % max_input_len))), 
+                    mode='constant', constant_values=py_text_seq[0][0])
+
     src_len = np.array([py_text_seq.shape[1]]).astype(np.int64)
     src_mask = get_mask_from_lengths(src_len)
 
-    res_e = encoder.infer(inputs={'hz_seq': cn_text_seq,
-                                  'src_mask': src_mask, 
-                                  'src_seq': py_text_seq})
-    encoder_output = res_e['encoder_output']
+    encoder_output_l = []
+    dp_output_l = []
+    decoder_output_l = []
+    mel_output_l = []
 
-    res_dp = duration_predictor.infer(inputs={'encoder_output': encoder_output,
-                                              'src_mask': src_mask})
-    dp_output = res_dp['duration_predictor_output']
+    for i in range(0, py_text_seq.shape[1], max_input_len):
+        res_e = encoder.infer(inputs={'hz_seq': cn_text_seq[0][i:i+max_input_len],
+                                  'src_mask': src_mask[0][i:i+max_input_len], 
+                                  'src_seq': py_text_seq[0][i:i+max_input_len]})
+
+        encoder_output_l.append(res_e['encoder_output'])
+    encoder_output = np.concatenate(encoder_output_l, axis=1)
+
+    for i in range(len(encoder_output_l)):
+        res_dp = duration_predictor.infer(inputs={'encoder_output': encoder_output_l[i],
+                                              'src_mask': src_mask[0][i:i+max_input_len]})
+        dp_output_l.append(res_dp['duration_predictor_output'])
+    dp_output = np.concatenate(dp_output_l, axis=1)
 
     if real_len:
         dp_output_r = dp_output[:, :real_len]
@@ -127,12 +145,28 @@ def synthesize(decoder, encoder, duration_predictor, mel,
     va_output, mel_len, ori_len = LR(encoder_output_r, d_rounded)
     mel_mask = get_mask_from_lengths(mel_len)
 
-    res_decoder = decoder.infer(inputs={'mel_mask': mel_mask,
-                                        'variance_adaptor_output': va_output})
 
-    res_mel = mel.infer(inputs={"decoder_output": res_decoder['decoder_output']})
+    for i in range(0, mel_mask.shape[1], 200):
+        res_decoder = decoder.infer(inputs={'mel_mask': mel_mask[0][i:i+200],
+                                        'variance_adaptor_output': va_output[0][i:i+200]})
+        decoder_output_l.append(res_decoder['decoder_output'])
 
-    return melgan.infer(inputs={'0': np.transpose(res_mel['mel_output'] + mel_mean, (0, 2, 1))})['Tanh_101'][:, :, :ori_len * 256]
+    decoder_output = np.concatenate(decoder_output_l, axis=1)
+    
+    for i in range(0, decoder_output.shape[1], 200):
+        res_mel = mel.infer(inputs={"decoder_output": decoder_output[0][i:i+200]})
+        mel_output_l.append(res_mel['mel_output'])
+
+    mel_output = np.concatenate(mel_output_l, axis=1)
+    mel_output = np.transpose(mel_output + mel_mean, (0, 2, 1))
+
+    melgan_output_l = []
+    for i in range(0, mel_output.shape[2], 200):
+        res_melgan = melgan.infer(inputs={'0': mel_output[:, :, i:i+200]})
+        melgan_output_l.append(res_melgan['Tanh_101'])
+    melgan_output = np.concatenate(melgan_output_l, axis=2)
+  
+    return melgan_output[:, :, :ori_len * 256]
 
 def main():
     log.basicConfig(format="[ %(levelname)s ] %(message)s", level=log.INFO, stream=sys.stdout)
@@ -199,17 +233,18 @@ def main():
 
     real_len = cn_sentence_seq.shape[1]
 
+    """
     # fill inputs
     cn_sentence_seq = np.pad(cn_sentence_seq, ((0, 0), (0, max_input_len - real_len)), 
                              mode='constant', constant_values=cn_sentence_seq[0][0])
     py_sentence_seq = np.pad(py_sentence_seq, ((0, 0), (0, max_input_len - real_len)), 
                              mode='constant', constant_values=py_sentence_seq[0][0])
+    """
 
     # Start sync inference
     generated_mel = synthesize(exec_decoder_net, exec_encoder_net, exec_dp_net, exec_mel_net,
                                exec_mg_net, py_sentence_seq, cn_sentence_seq, real_len=real_len)
 
-    generated_mel = generated_mel.reshape((1, 1, -1))
     generated_mel *= 32767 / max(0.01, np.max(np.abs(generated_mel)))
     wavfile.write('tts.wav', 22050, generated_mel.astype(np.int16))
     log.info("Generated tts.wav.")
