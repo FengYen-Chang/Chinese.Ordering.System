@@ -148,27 +148,27 @@ Options:
         -m_a    ${MODEL_DIR}/deepspeech-0.9.3-models-zh-CN.xml    \
         -p mds09x_cn                                              \
         -para ${PARAGRAPH_FILE}                                   \
-        -i ${WAVE_FILE}                                           \
+        -i audio/sample.wav                                       \
         -v_b ${VOCAB_DIR}/vocab_bert.txt                          \
-        -v_p ${VOCAB_DIR}/vocab_pinyin.txt
+        -v_p ${VOCAB_DIR}/vocab_pinyin.txt                        \
+        -L ${MODEL_DIR}/deepspeech-0.9.3-models-zh-CN.scorer
     ```
 
 * Output:
 
     ```sh
-    10.019194602966309      圧亦克都少前
-    [INFO] 2021-06-02 11:18:45,598 Load 1 examples
+    100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:00<00:00, 20.84it/s]
+    [INFO] 2021-06-18 14:59:58,559 Load 1 examples
     Content:  麦当劳目前的餐点有：大麦克价格为72元、双层牛肉吉事堡价格为62元、嫩煎鸡腿堡价格为82元、麦香鸡价格为44元、麦克鸡块(6块)价格为60元、麦克鸡块(10块)价格为100元、劲辣鸡腿堡价格为72元、麦脆鸡腿(2块)价格为110元、麦脆鸡翅(2块)价格为90元、黄金起司猪排堡价格为52元、麦香鱼价格为44元、烟熏鸡肉长堡价格为74元、姜烧猪肉长堡价格为74元、BLT安格斯黑牛堡价格为109元、BLT辣脆鸡腿堡价格为109元、BLT嫩煎鸡腿堡价格为109元、蕈菇安格斯黑牛堡价格为119元、凯萨脆鸡沙拉价格为99元和义式烤鸡沙拉价格为99元。
     Question:  大麦克多少钱
-    七十二元
     Building prefix dict from the default dictionary ...
-    [DEBUG] 2021-06-02 11:18:45,648 Building prefix dict from the default dictionary ...
+    [DEBUG] 2021-06-18 14:59:58,609 Building prefix dict from the default dictionary ...
     Loading model from cache /tmp/jieba.cache
-    [DEBUG] 2021-06-02 11:18:45,649 Loading model from cache /tmp/jieba.cache
-    Loading model cost 0.425 seconds.
-    [DEBUG] 2021-06-02 11:18:46,073 Loading model cost 0.425 seconds.
+    [DEBUG] 2021-06-18 14:59:58,610 Loading model from cache /tmp/jieba.cache
+    Loading model cost 0.422 seconds.
+    [DEBUG] 2021-06-18 14:59:59,031 Loading model cost 0.422 seconds.
     Prefix dict has been built successfully.
-    [DEBUG] 2021-06-02 11:18:46,073 Prefix dict has been built successfully.
+    [DEBUG] 2021-06-18 14:59:59,031 Prefix dict has been built successfully.
     /usr/lib/python3/dist-packages/apport/report.py:13: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
       import fnmatch, glob, traceback, errno, sys, atexit, locale, imp
     ValueError: Unknown Blob precision: BOOL
@@ -180,9 +180,12 @@ Options:
     ValueError: Unknown Blob precision: BOOL
     Exception ignored in: 'openvino.inference_engine.ie_api.BlobBuffer._get_blob_format'
     ValueError: Unknown Blob precision: BOOL
-    [INFO] 2021-06-02 11:18:46,902 Generated tts.wav.
-    [INFO] 2021-06-02 11:18:46,902 This sample is an API example, for any performance measurements please use the dedicated benchmark_app tool
+    [INFO] 2021-06-18 14:59:59,853 Generated tts.wav.
+    [INFO] 2021-06-18 14:59:59,853 This sample is an API example, for any performance measurements please use the dedicated benchmark_app tool
     ```
+    
+    > Once the process is done, we can find the `tts.wav` in the working directory.
+    > For this sample, you can hear the `七十二元` in the `tts.wav`
 
 ### Execute Speech Recognize System
 
@@ -237,22 +240,23 @@ optional arguments:
     python speech_recognition_demo.py                             \
         -m ${MODEL_DIR}/deepspeech-0.9.3-models-zh-CN.xml         \
         -p mds09x_cn                                              \
-        -i ${WAVE_FILE}                                           \
+        -i audio/sample.wav                                       \
         -L ${MODEL_DIR}/deepspeech-0.9.3-models-zh-CN.scorer
     ```
 
 * Output:
    
    ```sh
+   Loading, including network weights, IE initialization, LM, building LM vocabulary trie, loading audio: 0.5604348049964756 s
    Audio file length: 1.9505 s
    MFCC time: 0.002272702055051923 s
-   100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:00<00:00, 20.24it/s]
+   100%|████████████████████████████████████████████████████████████████████████████| 6/6 [00:00<00:00, 20.24it/s]
    RNN time: 0.29857360396999866 s
    Beam search time: 0.24717673601116985 s
    Overall time: 1.1114037550287321 s
 
    Transcription and confidence score:
-   -11.274085998535156     大麦克都少前
+   -42.48539733886719      大麦克多少钱
    ```
 
 
@@ -365,7 +369,7 @@ Options:
     [ INFO ] This sample is an API example, for any performance measurements please use the dedicated benchmark_app tool
     ```
 
-    After execution, you can get the output, `tts.wav`.
+    > Once the process is done, we can find the `tts.wav` in the working directory.
 
 ### Execute Question Answering System with Voice Synthesize System
 
@@ -530,4 +534,4 @@ Options:
 
     ```
 
-    After execution, you can get the output, `tts.wav`.
+    > Once the process is done, we can find the `tts.wav` in the working directory.
