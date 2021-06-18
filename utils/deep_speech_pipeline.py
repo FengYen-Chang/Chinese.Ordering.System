@@ -50,8 +50,12 @@ PROFILES = {
     'mds09x_cn': dict(
         alphabet = alphabet_module.get_default_CN_alphabet(),
         alphabet_type = 'utf-8',
-        alpha = 0.6940122363709647,
-        beta =4.777924224113021,
+        # DeepSpeech recommanded alpha and beta
+        # alpha = 0.6940122363709647,
+        # beta =4.777924224113021,
+        # The real number which use in the DeepSpeech demo
+        alpha = 0.93128901720047,
+        beta = 1.1834137439727783,
         model_sampling_rate = 16000,
         frame_window_size_seconds = 32e-3,
         frame_stride_seconds = 20e-3,

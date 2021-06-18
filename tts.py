@@ -80,7 +80,6 @@ def synthesize(decoder, encoder, duration_predictor, mel,
 
         for i, vec in enumerate(batch):
             expand_size = predicted[i].item()
-            print (expand_size)
             # out.append(vec.expand(int(expand_size), -1))
             out.append(np.broadcast_to(vec, (int(expand_size), 256)))
         out = np.concatenate(out, 0)
@@ -232,14 +231,6 @@ def main():
     cn_sentence_seq = utils.convert_cn(cn_sentence[0]).astype(np.int64)
 
     real_len = cn_sentence_seq.shape[1]
-
-    """
-    # fill inputs
-    cn_sentence_seq = np.pad(cn_sentence_seq, ((0, 0), (0, max_input_len - real_len)), 
-                             mode='constant', constant_values=cn_sentence_seq[0][0])
-    py_sentence_seq = np.pad(py_sentence_seq, ((0, 0), (0, max_input_len - real_len)), 
-                             mode='constant', constant_values=py_sentence_seq[0][0])
-    """
 
     # Start sync inference
     generated_mel = synthesize(exec_decoder_net, exec_encoder_net, exec_dp_net, exec_mel_net,
