@@ -163,19 +163,12 @@ def main():
     character_probs = stt.extract_per_frame_probs(audio_features, wrap_iterator=tqdm)
     transcription = stt.decode_probs(character_probs)
 
-    for candidate in transcription:
-        if ('cn' in args.profile):
-            candidate['text'] = bytes.fromhex(candidate['text']).decode('utf-8')
-        print("{}\t{}".format(candidate['conf'], candidate['text'],))
-
-    candidate['text'] = '大麦克多少钱'
-
     # Run BERT - SQUAD
     paragraph_text = squad.paragraph_reader(args.paragraph)
 
     examples, features = squad.export_feature_from_text(
                             paragraph_text = paragraph_text,
-                            question = candidate['text'],
+                            question = transcription[0]['text'],
                         )
 
     print ("Content: ", "".join(examples[0].doc_tokens))
