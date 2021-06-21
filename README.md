@@ -28,7 +28,7 @@ Please check below pages to enable it. Based on these pages, you can get the con
 
 # Run each function
 
-You can use below links to run each function or scroll down this page.
+You can use below links or scroll down this page to run each function of this repository.
 
 * [Execute Ordering System](#execute-ordering-system)
 * [Execute Speech Recognize System](#execute-speech-recognize-system)
