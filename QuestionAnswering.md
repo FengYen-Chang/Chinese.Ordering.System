@@ -31,13 +31,14 @@ To generate the training data, we constructed the python script with menu and so
 By this menu generator, the users can just run the script,  `mc_menu_generator.py` or `mos_menu_generator.py`, to get the training data.
 
 ```sh
-cd MenuGenerator
+cd menu-generator
 python mc_menu_generator.py
 ```
 
 or
 
 ```sh
+cd menu-generator
 python mos_menu_generator.py
 ```
 
@@ -100,7 +101,4 @@ After generated the training data, you can based on the **CMRC2018** dataset wit
 
 * Convert the tensorflow model to Intermediate Representation (IR)
 
-    Please check these two sections, [section 1](./extension/Chinese.BERT.OpenVINO/README.md#frozen-tenserflow-model) and [section 2](./extension/Chinese.BERT.OpenVINO/README.md#convert-the-frozen-tensorflow-model-to-intermediate-representation-ir) on repo., Chinese.BERT.OpenVINO to acquire the IR model.
-
-    
- 
+    Please check these two sections, [section 1](./extension/Chinese.BERT.OpenVINO/README.md#frozen-tenserflow-model) and [section 2](./extension/Chinese.BERT.OpenVINO/README.md#convert-the-frozen-tensorflow-model-to-intermediate-representation-ir) on repo., Chinese.BERT.OpenVINO to acquire the IR model. 
