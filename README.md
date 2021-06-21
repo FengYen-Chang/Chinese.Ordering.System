@@ -541,3 +541,15 @@ Options:
     ```
 
     > Once the process is done, we can find the `tts.wav` in the working directory.
+
+# Reference
+
+* [DeepSpeech](https://github.com/mozilla/DeepSpeech)
+* [bert](https://github.com/google-research/bert)
+* [roberta-wwm-base-distill](https://github.com/xiongma/roberta-wwm-base-distill)
+* [cmrc2018](https://github.com/ymcui/cmrc2018)
+* [Chinese mandarin text to speech (MTTS)](https://github.com/ranchlai/mandarin-tts)
+* [MelGAN](https://github.com/seungwonpark/melgan)
+* [Chinese Bert for OpenVINO](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO)
+* [OpenVINO™ Toolkit](https://01.org/openvinotoolkit)
+* [Open Model Zoo](https://github.com/openvinotoolkit/open_model_zoo)
