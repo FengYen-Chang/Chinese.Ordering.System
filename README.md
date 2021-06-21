@@ -38,9 +38,7 @@ You can use below links to run each function or scroll down this page.
 
 ### Execute Ordering System
 
-To run the ordering system demo, you can run 2 script, `ordering_system_demo_pipeline.py` and `ordering_system_demo.py`, for demo. In here, we recommand to run the `ordering_system_demo_pipeline.py`.
-
-Running the application with the -h option yields the following usage message:
+Runs the `ordering_system_demo_pipeline.py` for demo. Running the application with the -h option yields the following usage message:
 
 ```sh
 usage: ordering_system_demo_pipeline.py [-h] -m_mel MODEL_MEL -m_mg
