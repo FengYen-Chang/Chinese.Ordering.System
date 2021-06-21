@@ -120,17 +120,17 @@ class Text2SpeechPipeline:
 
         self.real_len = cn_sentence_seq.shape[1]
         cn_sentence_seq = np.pad(cn_sentence_seq, 
-            ((0, 0), (0, self.max_input_len - self.real_len)), 
+            ((0, 0), (0, self.max_input_len - self.real_len % self.max_input_len)),
             mode='constant', constant_values=cn_sentence_seq[0][0]
         )
         py_sentence_seq = np.pad(py_sentence_seq, 
-            ((0, 0), (0, self.max_input_len - self.real_len)), 
+            ((0, 0), (0, self.max_input_len - self.real_len % self.max_input_len)),
             mode='constant', constant_values=py_sentence_seq[0][0]
         )
 
         return cn_sentence_seq, py_sentence_seq
 
-    def _expand(self, batch, predicted):
+    def _expand(self, batch, predicted, max_length=200):
         out = list()
 
         for i, vec in enumerate(batch):
@@ -139,7 +139,7 @@ class Text2SpeechPipeline:
             out.append(np.broadcast_to(vec, (int(expand_size), 256)))
         out = np.concatenate(out, 0)
         ori_len = out.shape[0]
-        out = np.concatenate((out, np.zeros((200 - out.shape[0], out.shape[1]), dtype=np.float32)), 0)
+        out = np.concatenate((out, np.zeros((max_length - out.shape[0] % max_length, out.shape[1]), dtype=np.float32)), 0)
 
         return out, ori_len
 
@@ -174,31 +174,62 @@ class Text2SpeechPipeline:
         return mask
 
     def run_synthesize(self, py_text_seq, cn_text_seq, duration_control=1.0, prefix=''):
+        encoder_output_l = []
+        dp_output_l = []
+        mel_output_l = []
+        melgan_output_l = []
+
         src_len = np.array([py_text_seq.shape[1]]).astype(np.int64)
         src_mask = self.get_mask_from_lengths(src_len)
 
-        res_e = self.exec_net_e.infer(inputs={  'hz_seq': cn_text_seq,
-                                                'src_mask': src_mask, 
-                                                'src_seq': py_text_seq})
-        encoder_output = res_e['encoder_output']
+        for i in range(0, py_text_seq.shape[1], self.max_input_len):
+            res_e = self.exec_net_e.infer(
+                        inputs={
+                            'hz_seq': cn_text_seq[0][i:i+self.max_input_len],
+                            'src_mask': src_mask[0][i:i+self.max_input_len], 
+                            'src_seq': py_text_seq[0][i:i+self.max_input_len]
+                        })
 
-        res_dp = self.exec_net_dp.infer(inputs={'encoder_output': encoder_output,
-                                                'src_mask': src_mask})
-        dp_output = res_dp['duration_predictor_output']
+            res_dp = self.exec_net_dp.infer(
+                        inputs={
+                            'encoder_output': res_e['encoder_output'],
+                            'src_mask': src_mask[0][i:i+self.max_input_len]
+                        })
+
+            encoder_output_l.append(res_e['encoder_output'])
+            dp_output_l.append(res_dp['duration_predictor_output'])
+
+        encoder_output = np.concatenate(encoder_output_l, axis=1)
+        dp_output = np.concatenate(dp_output_l, axis=1)
 
         if self.real_len:
-            dp_output_r = dp_output[:, :self.real_len]
-            encoder_output_r = encoder_output[:, :self.real_len, :]
+            encoder_output_r, dp_output_r = encoder_output[:, :self.real_len, :], dp_output[:, :self.real_len]
 
-        d_rounded = np.clip(np.round((dp_output_r + self.duration_mean) * duration_control),
+        d_rounded = np.clip(
+                        np.round((dp_output_r + self.duration_mean) * duration_control),
                             a_min=0.0, a_max=None)
         va_output, mel_len, ori_len = self._LR(encoder_output_r, d_rounded)
         mel_mask = self.get_mask_from_lengths(mel_len)
 
-        res_decoder = self.exec_net_d.infer(inputs={'mel_mask': mel_mask,
-                                                    'variance_adaptor_output': va_output})
+        for i in range(0, mel_mask.shape[1], 200):
+            res_decoder = self.exec_net_d.infer(
+                            inputs={
+                                'mel_mask': mel_mask[0][i:i+200],            
+                                'variance_adaptor_output': va_output[0][i:i+200]
+                            })
+            res_mel = self.exec_net_mel.infer(
+                            inputs={
+                                "decoder_output": res_decoder['decoder_output']
+                            })
+            
+            mel_output_l.append(res_mel['mel_output'])
 
-        res_mel = self.exec_net_mel.infer(inputs={"decoder_output": res_decoder['decoder_output']})
+        mel_output = np.concatenate(mel_output_l, axis=1)
+        mel_output = np.transpose(mel_output + self.mel_mean, (0, 2, 1))
 
-        return self.exec_net_melgan.infer(inputs={'0': np.transpose(res_mel['mel_output'] + self.mel_mean, (0, 2, 1))})['Tanh_101'][:, :, :ori_len * 256]
-
+        for i in range(0, mel_output.shape[2], 200):
+            res_melgan = self.exec_net_melgan.infer(inputs={'0': mel_output[:, :, i:i+200]})
+            melgan_output_l.append(res_melgan['Tanh_101'])
+        melgan_output = np.concatenate(melgan_output_l, axis=2)
+        
+        return melgan_output[:, :, :ori_len * 256]

@@ -182,7 +182,6 @@ def main():
 
     generated_mel = tts.run_synthesize(py_sentence_seq, cn_sentence_seq)
 
-    generated_mel = generated_mel.reshape((1, 1, -1))
     generated_mel *= 32767 / max(0.01, np.max(np.abs(generated_mel)))
     wavfile.write('tts.wav', 22050, generated_mel.astype(np.int16))
     log.info("Generated tts.wav.")
