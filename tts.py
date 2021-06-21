@@ -118,48 +118,55 @@ def synthesize(decoder, encoder, duration_predictor, mel,
 
     encoder_output_l = []
     dp_output_l = []
-    decoder_output_l = []
     mel_output_l = []
+    melgan_output_l = []
 
     for i in range(0, py_text_seq.shape[1], max_input_len):
-        res_e = encoder.infer(inputs={'hz_seq': cn_text_seq[0][i:i+max_input_len],
-                                  'src_mask': src_mask[0][i:i+max_input_len], 
-                                  'src_seq': py_text_seq[0][i:i+max_input_len]})
+        res_e = encoder.infer(
+                    inputs={
+                        'hz_seq': cn_text_seq[0][i:i+max_input_len],
+                        'src_mask': src_mask[0][i:i+max_input_len], 
+                        'src_seq': py_text_seq[0][i:i+max_input_len]
+                    })
+
+        res_dp = duration_predictor.infer(
+                    inputs={
+                        'encoder_output': res_e['encoder_output'],
+                        'src_mask': src_mask[0][i:i+max_input_len]
+                    })
 
         encoder_output_l.append(res_e['encoder_output'])
-    encoder_output = np.concatenate(encoder_output_l, axis=1)
-
-    for i in range(len(encoder_output_l)):
-        res_dp = duration_predictor.infer(inputs={'encoder_output': encoder_output_l[i],
-                                              'src_mask': src_mask[0][i:i+max_input_len]})
         dp_output_l.append(res_dp['duration_predictor_output'])
+
+    encoder_output = np.concatenate(encoder_output_l, axis=1)
     dp_output = np.concatenate(dp_output_l, axis=1)
 
     if real_len:
-        dp_output_r = dp_output[:, :real_len]
-        encoder_output_r = encoder_output[:, :real_len, :]
+        encoder_output_r, dp_output_r = encoder_output[:, :real_len, :], dp_output[:, :real_len]
 
-    d_rounded = np.clip(np.round((dp_output_r + duration_mean) * duration_control),
+    d_rounded = np.clip(
+                    np.round((dp_output_r + duration_mean) * duration_control),
                         a_min=0.0, a_max=None)
     va_output, mel_len, ori_len = LR(encoder_output_r, d_rounded)
     mel_mask = get_mask_from_lengths(mel_len)
 
 
     for i in range(0, mel_mask.shape[1], 200):
-        res_decoder = decoder.infer(inputs={'mel_mask': mel_mask[0][i:i+200],
-                                        'variance_adaptor_output': va_output[0][i:i+200]})
-        decoder_output_l.append(res_decoder['decoder_output'])
-
-    decoder_output = np.concatenate(decoder_output_l, axis=1)
-    
-    for i in range(0, decoder_output.shape[1], 200):
-        res_mel = mel.infer(inputs={"decoder_output": decoder_output[0][i:i+200]})
+        res_decoder = decoder.infer(
+                        inputs={
+                            'mel_mask': mel_mask[0][i:i+200],            
+                            'variance_adaptor_output': va_output[0][i:i+200]
+                        })
+        res_mel = mel.infer(
+                        inputs={
+                            "decoder_output": res_decoder['decoder_output']
+                        })
+        
         mel_output_l.append(res_mel['mel_output'])
 
     mel_output = np.concatenate(mel_output_l, axis=1)
     mel_output = np.transpose(mel_output + mel_mean, (0, 2, 1))
 
-    melgan_output_l = []
     for i in range(0, mel_output.shape[2], 200):
         res_melgan = melgan.infer(inputs={'0': mel_output[:, :, i:i+200]})
         melgan_output_l.append(res_melgan['Tanh_101'])
