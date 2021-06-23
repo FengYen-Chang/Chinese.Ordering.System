@@ -228,8 +228,8 @@ class Text2SpeechPipeline:
         mel_output = np.transpose(mel_output + self.mel_mean, (0, 2, 1))
 
         for i in range(0, mel_output.shape[2], 200):
-            res_melgan = self.exec_net_melgan.infer(inputs={'0': mel_output[:, :, i:i+200]})
-            melgan_output_l.append(res_melgan['Tanh_101'])
+            res_melgan = self.exec_net_melgan.infer(inputs={'mel': mel_output[:, :, i:i+200]})
+            melgan_output_l.append(res_melgan['mel_output'])
         melgan_output = np.concatenate(melgan_output_l, axis=2)
         
         return melgan_output[:, :, :ori_len * 256]
