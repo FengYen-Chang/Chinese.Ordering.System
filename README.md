@@ -1,14 +1,7 @@
 # Chinese Ordering System 
 
 **Notice:**
- * **This reposiotry still under develop.**
-    * Still debug the Chinese language model based on the kenlm Version 5 for speech recognize model.
-    * Will upload the model conversation method of Chinese language model and speech recognize model.
- * Currently, this reposiotry is using `ds_ctcdecoder`version `0.9.3` to replace `ctcdecode_numpy`.
-   ```sh
-   pip install ds-ctcdecoder=0.9.3
-   ```
-
+ * Currently, this reposiotry is using `ds_ctcdecoder`version `0.9.3` to replace `ctcdecode_numpy` to run the `scorer`.
  * Please pay attention to the speech recognize model of license, **Mozilla Public License 2.0**.
 
 This is an ordering system wihch based on the 
@@ -25,6 +18,14 @@ Please check below pages to enable it. Based on these pages, you can get the con
 * [Speech Recognition System](./SpeechRecognition.md)
 * [Question Answering System](./QuestionAnswering.md)
 * [Voice Synthesize System](./VoiceSynthesize.md) 
+
+# Dependencies
+
+Please run below command to install all dependencies.
+
+```sh
+pip install -r requirements.txt
+```
 
 # Run each function
 
