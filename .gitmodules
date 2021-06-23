@@ -7,3 +7,6 @@
 [submodule "extension/melgan"]
 	path = extension/melgan
 	url = ../melgan
+[submodule "extension/cmrc2018"]
+	path = extension/cmrc2018
+	url = ../cmrc2018
