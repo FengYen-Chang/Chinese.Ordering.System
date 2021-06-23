@@ -168,8 +168,8 @@ def synthesize(decoder, encoder, duration_predictor, mel,
     mel_output = np.transpose(mel_output + mel_mean, (0, 2, 1))
 
     for i in range(0, mel_output.shape[2], 200):
-        res_melgan = melgan.infer(inputs={'0': mel_output[:, :, i:i+200]})
-        melgan_output_l.append(res_melgan['Tanh_101'])
+        res_melgan = melgan.infer(inputs={'mel': mel_output[:, :, i:i+200]})
+        melgan_output_l.append(res_melgan['mel_output'])
     melgan_output = np.concatenate(melgan_output_l, axis=2)
   
     return melgan_output[:, :, :ori_len * 256]
