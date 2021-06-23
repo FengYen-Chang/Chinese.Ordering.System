@@ -1,0 +1,11 @@
+librosa == 0.7.2
+numpy
+scipy
+ipdb
+pypinyin
+jieba
+perf-logger
+numba==0.48
+pyyaml
+pycnnum
+ds_ctcdecoder==0.9.3
