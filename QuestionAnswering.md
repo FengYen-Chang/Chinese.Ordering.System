@@ -63,42 +63,93 @@ If you want to enable the specific conversation or another menu, you can based o
 
 After generated the training data, you can based on the **CMRC2018** dataset with Chinese BERT pre-trained model to fine tune your Question Answering system for conversation. 
 
-> **For more detail about the Chinese BERT Please check this [page](./extension/Chinese.BERT.OpenVINO/README.md).**
-
 * Preparation
     
-    Please check [Preparation section](./extension/Chinese.BERT.OpenVINO/README.md#preparation) on repo., Chinese.BERT.OpenVINO.
+    Please check [Preparation section](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO#preparation) on repo., Chinese.BERT.OpenVINO to download the distilled bert model and follow below command to download cmrc2018 submodules.
+    
+    ```sh
+    git submodule update --init ./extension/cmrc2018
+    ```
+    
+    Install `tensorflow` version `1.15.0`.
+    
+    ```sh
+    pip install tensorflow==1.15.0
+    ```
 
 * Fine Tuning the BERT Model for Conversation
 
     After preparation, we can use the pretrained and distilled BERT model and dataset, CMRC2018, with generated training data to fine tune the model.
+    
+    > In this repo., I am using `Roberta-wwm-ext-large-3layers-distill, Chinese`.
 
     ```sh
-    cd cmrc2018/baseline
+    cd extension/cmrc2018/baseline
 
     export PATH_TO_BERT=/path/to/distilled/bert/model/3layers_large
     export DATA_DIR=/path/to/generatd/dataset
     export OUTPUT_DIR=/path/to/save/result/and/tuned_model
 
-    python run_cmrc2018_drcd_baseline.py \
-        --vocab_file=${PATH_TO_BERT}/vocab.txt \
+    python run_cmrc2018_drcd_baseline.py                    \
+        --vocab_file=${PATH_TO_BERT}/vocab.txt              \
         --bert_config_file=${PATH_TO_BERT}/bert_config.json \
-        --init_checkpoint=${PATH_TO_BERT}/bert_model.ckpt \
-        --do_train=True \
-        --train_file=${DATA_DIR}/test_1.json \
-        --do_predict=True \
-        --predict_file=${DATA_DIR}/test_1.json \
-        --train_batch_size=32 \
-        --num_train_epochs=40 \
-        --max_seq_length=256 \
-        --doc_stride=128 \
-        --learning_rate=3e-5 \
-        --save_checkpoints_steps=1000 \
-        --output_dir=${OUTPUT_DIR} \
-        --do_lower_case=False \
+        --init_checkpoint=${PATH_TO_BERT}/bert_model.ckpt   \
+        --do_train=True                                     \
+        --train_file=${DATA_DIR}/test_1.json                \
+        --do_predict=True                                   \
+        --predict_file=${DATA_DIR}/test_1.json              \
+        --train_batch_size=32                               \
+        --num_train_epochs=40                               \
+        --max_seq_length=256                                \
+        --doc_stride=128                                    \
+        --learning_rate=3e-5                                \
+        --save_checkpoints_steps=1000                       \
+        --output_dir=${OUTPUT_DIR}                          \
+        --do_lower_case=False                               \
         --use_tpu=False
     ```
 
-* Convert the tensorflow model to Intermediate Representation (IR)
+    > If you want to evaluate the result, please check this [page](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO#evaluate-the-fine-tuning-result).
 
-    Please check these two sections, [section 1](./extension/Chinese.BERT.OpenVINO/README.md#frozen-tenserflow-model) and [section 2](./extension/Chinese.BERT.OpenVINO/README.md#convert-the-frozen-tensorflow-model-to-intermediate-representation-ir) on repo., Chinese.BERT.OpenVINO to acquire the IR model. 
+* Export PB Model
+
+    ```sh
+    export PATH_TO_BERT=/path/to/distilled/bert/model/3layers_large
+    export DATA_DIR=/path/to/generatd/dataset
+    export OUTPUT_DIR=/path/to/save/result/and/tuned_model
+    export FINE_TUNED_CHECK_POINT=${OUTPUT_DIR}/model.ckpt-xxx
+
+    python export_pb.py                                     \
+        --vocab_file=${PATH_TO_BERT}/vocab.txt              \
+        --bert_config_file=${PATH_TO_BERT}/bert_config.json \
+        --init_checkpoint=${FINE_TUNED_CHECK_POINT}         \
+        --do_train=True                                     \
+        --train_file=${DATA_DIR}/test_1.json                \
+        --do_predict=True                                   \
+        --predict_file=${DATA_DIR}/test_1.json              \
+        --train_batch_size=32                               \
+        --num_train_epochs=40                               \
+        --max_seq_length=256                                \
+        --doc_stride=128                                    \
+        --learning_rate=3e-5                                \
+        --save_checkpoints_steps=1000                       \
+        --output_dir=${OUTPUT_DIR}                          \
+        --do_lower_case=False                               \
+        --use_tpu=False
+    ```
+    
+
+* Convert the `.pb` model to Intermediate Representation (IR)
+
+    Please use below command to run the Model Optimizer for those converted `.pb` model to IR model.
+
+    ```sh
+    export MODEL_DIR=/path/to/converted/pb/model
+    export OUTPUT_DIR=/path/to/converted/IR/model
+
+    python mo.py 
+        --input_model=${MODEL_DIR}/inference_graph.pb                                                       \
+  	    --input "IteratorGetNext:0{i32}[1 256],IteratorGetNext:1{i32}[1 256],IteratorGetNext:3{i32}[1 256]" \
+  	    --disable_nhwc_to_nchw                                                                              \
+        -o ${OUTPUT_DIR}
+    ```
