@@ -41,7 +41,7 @@ In this page, it shows the all steps to enable the Chinese base FastSpeech2 and 
 
     > After run `export_onnx.py`, you could see the folder `onnx` in current working directory and it includes 4 `.onnx` models, `decoder.onnx`, `duration_predictor.onnx`, `encoder.onnx` and `mel.onnx`.
    
-* Convert the all .onnx model to Intermediate Representation (IR)
+* Convert the all `.onnx` model to Intermediate Representation (IR)
 
     Please use below command to run the Model Optimizer for those converted `.onnx` model to IR model.
 
@@ -67,7 +67,7 @@ In this page, it shows the all steps to enable the Chinese base FastSpeech2 and 
 
     > After run `export_onnx.py`, you could see the folder `onnx` in current working directory and it includes 1 `.onnx` model, `melgan.onnx`.
    
-* Convert the all .onnx model to Intermediate Representation (IR)
+* Convert the `.onnx` model to Intermediate Representation (IR)
 
     Please use below command to run the Model Optimizer for those converted `.onnx` model to IR model.
 
