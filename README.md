@@ -196,7 +196,7 @@ Options:
 
 ### Execute Speech Recognize System
 
-For speech recognize system, you can run `speech_recognition_demo.py` which is from [OMZ](https://github.com/openvinotoolkit/open_model_zoo) to execute it.
+For speech recognize system, you can run `speech_recognition_demo.py` which is based on [OMZ](https://github.com/openvinotoolkit/open_model_zoo) sample to execute it.
 
 Running the application with the -h option yields the following usage message:
 
@@ -275,7 +275,7 @@ For Question Answering System, please run below command first,
 git submodule update --init ./extension/Chinese.BERT.OpenVINO
 ```
 
-,and check this [page](./extension/Chinese.BERT.OpenVINO/README.md)
+,and check this [page](https://github.com/FengYen-Chang/Chinese.BERT.OpenVINO/blob/main/README.md)
 
 ### Execute Voice Synthesize System
 
