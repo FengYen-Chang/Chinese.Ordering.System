@@ -11,6 +11,10 @@ This is an ordering system wihch based on the
 
 for Chinese. By this system, user can order a meal with voice and the ordering system will reply the price.
 
+# Docker container for demo
+
+Please check this [page](https://hackmd.io/@chungyeh/ByD755FoO) for detail.
+
 # Enable Each Components
 
 Please check below pages to enable it. Based on these pages, you can get the converted IR model and you can follow next section to execute it with converted IR model.
