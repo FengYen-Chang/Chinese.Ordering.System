@@ -42,7 +42,7 @@ cd menu-generator
 python mos_menu_generator.py
 ```
 
-And the generated training data, `test_1.json`, will like below with specific ID.
+The generated training data, `test_1.json`, will like below with specific ID. (The `mos_menu_generator.py` will generate the `mos_test_1.json`.)
 
 ```json
 "question": "大麦克多少钱？", 
@@ -54,6 +54,8 @@ And the generated training data, `test_1.json`, will like below with specific ID
     }
 ]
 ```
+
+And it also generate the `paragraph.txt` for demo.
 
 ### Own Generator
 
