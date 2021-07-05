@@ -89,7 +89,11 @@ menu["data"] = []
 _set = {}
 
 _set["id"] = "MCDONALDS_168"
-_set["context"] = "麦当劳目前的餐点有：大麦克价格为72元、双层牛肉吉事堡价格为62元、嫩煎鸡腿堡价格为82元、麦香鸡价格为44元、麦克鸡块(6块)价格为60元、麦克鸡块(10块)价格为100元、劲辣鸡腿堡价格为72元、麦脆鸡腿(2块)价格为110元、麦脆鸡翅(2块)价格为90元、黄金起司猪排堡价格为52元、麦香鱼价格为44元、烟熏鸡肉长堡价格为74元、姜烧猪肉长堡价格为74元、BLT 安格斯黑牛堡价格为109元、BLT 辣脆鸡腿堡价格为109元、BLT 嫩煎鸡腿堡价格为109元、蕈菇安格斯黑牛堡价格为119元、凯萨脆鸡沙拉价格为99元和义式烤鸡沙拉价格为99元。"
+context_init = "麦当劳目前的餐点有："
+_set["context"] = context_init
+for _meal in [ (_meal + str(main_meals[_meal][0]) + unit + "、") for _meal in list(main_meals.keys())] :
+    _set["context"] = _set["context"] + _meal
+_set["context"] = _set["context"][:-1] + "。"
 
 # _set["qas"] = QuestionGenerator(questions, main_meals, unit, num_set=20)
 _set["qas"] = QuestionGenerator(questions, main_meals, unit)
@@ -101,3 +105,7 @@ menu["data"].append(paragraphs)
 
 with open('test_1.json', 'w', encoding="utf-8") as outfile:
     json.dump(menu, outfile, indent=4, ensure_ascii=False)
+
+with open("paragraph.txt", 'w', encoding="utf-8") as outfile:
+    outfile.writelines(_set["context"])
+    outfile.close()
