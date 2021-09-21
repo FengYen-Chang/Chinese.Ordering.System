@@ -1,7 +1,8 @@
 # Chinese Ordering System 
 
 **Notice:**
- * Currently, this reposiotry is using `ds_ctcdecoder`version `0.9.3` to replace `ctcdecode_numpy` to run the `scorer`.
+ * This sample is based on the [OpenVINO™ Toolkit](https://01.org/openvinotoolkit) version `2021.3`.
+ * Currently, this reposiotry is using `ds_ctcdecoder`version `0.9.3` to replace `ctcdecode_numpy` to run the Chinese - `scorer`.
  * Please pay attention to the speech recognize model of license, **Mozilla Public License 2.0**.
 
 This is an ordering system wihch based on the 
@@ -10,6 +11,8 @@ This is an ordering system wihch based on the
 * [Voice Synthesize System](./VoiceSynthesize.md) 
 
 for Chinese. By this system, user can order a meal with voice and the ordering system will reply the price.
+
+> The speech recognition part is from [sample](https://github.com/openvinotoolkit/open_model_zoo/tree/2021.3/demos/speech_recognition_demo/python) of Open Model Zoo ([repo.](https://github.com/openvinotoolkit/open_model_zoo/tree/2021.3/)).
 
 # Docker container for demo
 
